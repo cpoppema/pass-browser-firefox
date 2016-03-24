@@ -1,8 +1,21 @@
 body {
-  padding-top: .9375rem;
-  padding-bottom: .9375rem;
   background-color: #eee;
   width: 330px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+html {
+  /* firefox only seems to respect this initial value for its panel height */
+  height: 600px;
+
+  max-height: 600px;
+  overflow-y: hidden;
+}
+
+.container {
+  padding-top: .9375rem;
+  padding-bottom: .9375rem;
 }
 
 .links {
