@@ -213,6 +213,16 @@ chrome.notifications.onClicked.addListener(function callback(notificationId) {
       getPassword(path, username, done);
     },
 
+    // interface to storage (required for options.js for firefox web-extensions)
+    storageGet: function storageGet(items, done) {
+      chrome.storage.local.get(items, done);
+    },
+
+    // interface to storage (required for options.js for firefox web-extensions)
+    storageSet: function storageSet(options, done) {
+      chrome.storage.local.set(options, done);
+    },
+
     testPassphrase: function testPassphrase(passphrase, done) {
       // test passphrase with private key
       chrome.storage.local.get(['privateKey', 'timeout', 'publicKey'],
