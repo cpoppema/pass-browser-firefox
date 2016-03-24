@@ -123,7 +123,7 @@
   }
 
   function preloadOptionsForm() {
-    chrome.storage.local.get(['publicKey', 'server', 'timeout'],
+    msg.bg('storageGet', ['publicKey', 'server', 'timeout'],
       function getCurrentOptionsCallback(items) {
         // get server address
         if (items.server) {
@@ -177,7 +177,7 @@
       options.privateKey = keyPair.privateKey;
     }
 
-    chrome.storage.local.set(options,
+    msg.bg('storageSet', options,
       function saveOptionsCallback() {
         $('#status').text('Options saved.');
         setTimeout(function hideStatus() {
