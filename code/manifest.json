@@ -40,5 +40,10 @@
     "options_ui": {
         "page": "html/options.html",
         "chrome_style": false
+    },
+    "applications": {
+      "gecko": {
+        "id": "pass-browser@web-extensions.org"
+      }
     }
 }
