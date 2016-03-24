@@ -9,7 +9,6 @@
 
   var msg = require('./modules/msg').init('popup');
 
-
   function autofocus() {
     var elem = $('[autofocus]:visible');
     if (elem && inViewport(elem.get(0))) {
@@ -199,10 +198,16 @@
         } else {
           $(secretElem).hide();
         }
+
+        // properly size popup
+        resizeViewport();
       });
     } else {
       // show all
       $('.secret').show();
+
+      // properly size popup
+      resizeViewport();
     }
   }
 
@@ -396,6 +401,9 @@
             // show element
             $(secretElem).show();
 
+            // properly size popup
+            resizeViewport();
+
             if ((i + 1) === secrets.length) {
               // end progress
               progress.end();
@@ -413,7 +421,16 @@
       }
       var noSecretsMessage = $($('#no-secrets-template').html());
       noSecretsMessage.appendTo($('#secrets'));
+
+      // properly size popup
+      resizeViewport();
     }
+  }
+
+  function resizeViewport() {
+    $('html').css('height', '');
+    var height = $('body').outerHeight();
+    $('html').css('height', height);
   }
 
   function restoreLastQuery() {
@@ -495,6 +512,9 @@
         showLogout();
       }
     });
+
+    // properly size popup
+    resizeViewport();
   }
 
   function showUnlock() {
@@ -506,6 +526,9 @@
     $('#unlock-form').show();
     var unlockForm = $($('#unlock-form-template').html());
     unlockForm.appendTo($('#unlock-form'));
+
+    // properly size popup
+    resizeViewport();
   }
 
   function startProgress(elem, reset) {
