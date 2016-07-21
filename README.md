@@ -1,6 +1,6 @@
-# pass-browser-chrome
+# pass-browser-firefox
 
-pass-browser-chrome is a browser plugin for chrome/chromium that brings your secrets managed by `pass` to your browser. Read all about `pass` [here](http://www.passwordstore.org).
+pass-browser-firefox is a browser plugin for firefox with web-extensions support (v48+) that brings your secrets managed by `pass` to your browser. Read all about `pass` [here](http://www.passwordstore.org).
 
 ## How to use
 
@@ -13,13 +13,15 @@ For this setup to work, secrets must be stored in the format `url/username`, for
 ## How to install
 
 Install the browser plugin by either:
-- adding it from the [web store](https://chrome.google.com/webstore/detail/pass-browser-chrome/ncoadlppaciemlepmdmdnecjlfmbidcd) (this shows some screenshots also)
-- downloading pass-browser-chrome-{version}.crx directly from the [releases](../../releases) page
+- adding it from the [add-ons store](https://addons.mozilla.org/nl/firefox/addon/pass-browser-firefox/) (this shows some screenshots also)
+- downloading pass-browser-firefox-{version}.xpi directly from the [releases](../../releases) page
 - building it yourself
     * clone this repository
     * run `npm install`
     * run `grunt`
-    * install the extension from file build/pass-browser-chrome-{version}.crx
+    * `cd ./build/unpacked-prod/`
+    * in this step you would need to sign it here yourself using https://github.com/mozilla/web-ext
+    * install from the downloaded xpi: ./web-ext-artifacts/pass_browser_firefox-{version}-an+fx.xpi
 
 ## How to give this extension access to your passwords
 
@@ -71,7 +73,7 @@ You will see something like this, all you need to remember is one thing from thi
 
 ```Shell
 gpg: /home/me/.gnupg/trustdb.gpg: trustdb created
-gpg: key 5AF8663E: public key "pass-extension-chrome" imported
+gpg: key 5AF8663E: public key "pass-extension-firefox" imported
 gpg: Total number processed: 1
 gpg:               imported: 1  (RSA: 1)
 ```
