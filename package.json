@@ -1,5 +1,5 @@
 {
-  "name": "pass-browser-firefox",
+  "name": "pass-browser",
   "license": "GNU GPL v3.0",
   "description": "Make secrets easily accessible from your pass' ~/.password-store",
   "author": "Cornelis Poppema",

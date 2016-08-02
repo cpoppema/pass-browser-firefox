@@ -51,7 +51,7 @@
     },
     "applications": {
       "gecko": {
-        "id": "pass-browser-firefox@web-extensions"
+        "id": "pass-browser@web-extensions"
       }
     }
 }
