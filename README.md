@@ -13,8 +13,8 @@ For this setup to work, secrets must be stored in the format `url/username`, for
 ## How to install
 
 Install the browser plugin by either:
-- adding it from the [add-ons store](https://addons.mozilla.org/nl/firefox/addon/pass-browser-firefox/) (this shows some screenshots also)
-- downloading pass-browser-firefox-{version}.xpi directly from the [releases](../../releases) page
+- adding it from the [add-ons store](https://addons.mozilla.org/nl/firefox/addon/pass-browser/) (this shows some screenshots also)
+- downloading pass-browser-{version}.xpi directly from the [releases](../../releases) page
 - building it yourself
     * clone this repository
     * run `npm install`
