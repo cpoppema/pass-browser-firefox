@@ -94,24 +94,102 @@
         });
     });
 
+    // copy username
+    $('.container').on('click', '.username-copy', function onClick(event) {
+      var username = $(event.target).closest('.secret').find('.username');
+
+      copyToClipboard(username);
+
+      // remove existing 'copied' indicators
+      $('.copied').each(function forEachCopiedElem(i, elem) {
+        $(elem).text($(elem).data('reset-text'));
+        $(elem).removeClass('copied label-primary');
+      });
+      // indicate this username has been copied
+      $(event.target).text($(event.target).data('copied-text'));
+      $(event.target).addClass('copied label-primary');
+    });
+
+    // copy password
+    $('.container').on('click', '.password-copy', function onClick(event) {
+      var secret = $(event.target).closest('.secret');
+      var password = $(secret).find('.password');
+
+      // copy-to-clipboard doesn't work from a background page (yet)
+      // so:
+      // - copy an already shown password, or..
+      // - fetch it, show it, copy it, hide it
+      if ($(secret).find('.password-show').hasClass('label-success')) {
+        copyToClipboard(password);
+
+        // remove existing 'copied' indicators
+        $('.copied').each(function forEachCopiedElem(i, elem) {
+          $(elem).text($(elem).data('reset-text'));
+          $(elem).removeClass('copied label-primary');
+        });
+        // indicate this password has been copied
+        $(event.target).text($(event.target).data('copied-text'));
+        $(event.target).removeClass('label-danger');
+        $(event.target).addClass('copied label-primary');
+      } else {
+        // since a .trigger('click') doesn't work with adding callbacks this
+        // is simply duplicate code
+        var secretTemplate = $($('#secrets-list-item-template').html());
+        var hiddenPasswordText = secretTemplate.find('input.password').val();
+        var path = $(secret).data('path');
+        var username = $(secret).data('username');
+
+        // fetch it
+        msg.bg('showPassword', path, username,
+          function showPasswordCallback(data) {
+            if (data.error) {
+              $(password).val(hiddenPasswordText);
+              $(event.target).removeClass('label-success');
+              $(event.target).addClass('label-danger');
+
+              showErrorNotification(data.error + ': ' + data.response);
+            } else {
+              // show it
+              $(password).val(data.password);
+              $(event.target).removeClass('label-danger');
+              // copy it
+              copyToClipboard(password);
+              // hide it
+              $(password).val(hiddenPasswordText);
+
+              // remove existing 'copied' indicators
+              $('.copied').each(function forEachCopiedElem(i, elem) {
+                $(elem).text($(elem).data('reset-text'));
+                $(elem).removeClass('copied label-primary');
+              });
+              // indicate this password has been copied
+              $(event.target).text($(event.target).data('copied-text'));
+              $(event.target).removeClass('label-danger');
+              $(event.target).addClass('copied label-primary');
+            }
+          });
+      }
+    });
+
     // show password
     $('.container').on('click', '.password-show', function onClick(event) {
       var secretTemplate = $($('#secrets-list-item-template').html());
       var hiddenPasswordText = secretTemplate.find('input.password').val();
       var secret = $(event.target).closest('.secret');
+      var password = $(secret).find('.password');
       var path = $(secret).data('path');
       var username = $(secret).data('username');
 
       msg.bg('showPassword', path, username,
         function showPasswordCallback(data) {
           if (data.error) {
-            $(secret).find('.password').val(hiddenPasswordText);
+            $(password).val(hiddenPasswordText);
             $(event.target).removeClass('label-success');
             $(event.target).addClass('label-danger');
 
             showErrorNotification(data.error + ': ' + data.response);
           } else {
-            $(secret).find('.password').val(data.password);
+            $(password).val(data.password);
             $(event.target).removeClass('label-danger');
             $(event.target).addClass('label-success');
           }
@@ -182,6 +260,19 @@
 
   function clearAlerts() {
     $('.alerts').empty();
+  }
+
+  /**
+   * Helper function to copy text from an input element to clipboard.
+   *
+   * copy-to-clipboard doesn't work from a background page:
+   * https://bugzilla.mozilla.org/show_bug.cgi?id=1272869
+   */
+  function copyToClipboard(input) {
+    input.focus();
+    input.select();
+    document.execCommand('Copy');
+    input.blur();
   }
 
   function filterSecrets(query) {

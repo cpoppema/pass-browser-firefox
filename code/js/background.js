@@ -19,15 +19,15 @@ chrome.notifications.onClicked.addListener(function callback(notificationId) {
   /**
    * Helper function to copy text to clipboard.
    */
-  function copyToClipboard(text) {
-    var input = document.createElement('textarea');
-    document.body.appendChild(input);
-    input.value = text;
-    input.focus();
-    input.select();
-    document.execCommand('Copy');
-    input.remove();
-  }
+  // function copyToClipboard(text) {
+  //   var input = document.createElement('textarea');
+  //   document.body.appendChild(input);
+  //   input.value = text;
+  //   input.focus();
+  //   input.select();
+  //   document.execCommand('Copy');
+  //   input.remove();
+  // }
 
   /**
    * Retrieve password from server.
@@ -97,24 +97,24 @@ chrome.notifications.onClicked.addListener(function callback(notificationId) {
     });
 
   handlers = {
-    copyUsername: function copyUsername(username, done) {
-      copyToClipboard(username);
+    // copyUsername: function copyUsername(username, done) {
+    //   copyToClipboard(username);
 
-      done();
-    },
+    //   done();
+    // },
 
-    copyPassword: function copyPassword(path, username, done) {
-      getPassword(path, username, function getPasswordCallback(result) {
-        if (!result.error) {
-          // copy
-          copyToClipboard(result.password);
+    // copyPassword: function copyPassword(path, username, done) {
+    //   getPassword(path, username, function getPasswordCallback(result) {
+    //     if (!result.error) {
+    //       // copy
+    //       copyToClipboard(result.password);
 
-          // clear
-          result.password = null;
-        }
-        done(result);
-      });
-    },
+    //       // clear
+    //       result.password = null;
+    //     }
+    //     done(result);
+    //   });
+    // },
 
     fillForm: function fillForm(path, username, done) {
       getPassword(path, username, function getPasswordCallback(result) {
