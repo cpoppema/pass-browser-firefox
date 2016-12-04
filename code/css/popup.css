@@ -1,21 +1,16 @@
 body {
+  padding-top: .9375rem;
+  padding-bottom: .9375rem;
   background-color: #eee;
   width: 330px;
-  height: 100%;
-  overflow-y: auto;
+  /* extra width is caused by the y-scrollbar:
+   * https://bugzilla.mozilla.org/show_bug.cgi?id=1309143 */
+  overflow-x: hidden;
 }
 
 html {
-  /* firefox only seems to respect this initial value for its panel height */
-  height: 600px;
-
+  /* without max-height this panel scrolls to the top after every click */
   max-height: 600px;
-  overflow-y: hidden;
-}
-
-.container {
-  padding-top: .9375rem;
-  padding-bottom: .9375rem;
 }
 
 .links {
