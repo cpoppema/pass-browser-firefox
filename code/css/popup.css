@@ -61,6 +61,7 @@ html {
   border: 0;
   padding: 0;
   margin: 0;
+  background-color: transparent;
 }
 
 .secrets-list .list-group-item-text input.username {
