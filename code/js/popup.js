@@ -12,7 +12,20 @@
   function autofocus() {
     var elem = $('[autofocus]:visible');
     if (elem && inViewport(elem.get(0))) {
-      $(elem).focus();
+      // do a little dance to grab attention because this doesn't always
+      // *immediately* work, add a delay for it:
+      // $(elem).focus();
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=1324255
+      setTimeout(function setFocusFirst() {
+        $(elem).focus();
+      }, 100);
+      var secondTimeout = setTimeout(function setFocusSecond() {
+        $(elem).focus();
+      }, 150);
+      $(window).one('focus', function() {
+        // cancel second try when window has focus
+        clearTimeout(secondTimeout);
+      });
     }
   }
 
