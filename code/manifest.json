@@ -6,7 +6,8 @@
     },
     "browser_action": {
         "default_icon": "images/icon-locked-128.png",
-        "default_popup": "html/popup.html"
+        "default_popup": "html/popup.html",
+        "browser_style": false
     },
     "background": {
         "scripts": [
@@ -33,7 +34,8 @@
     "content_security_policy": "script-src 'self'; object-src 'self'",
     "options_ui": {
         "page": "html/options.html",
-        "chrome_style": false
+        "chrome_style": false,
+        "browser_style": false
     },
     "applications": {
       "gecko": {
