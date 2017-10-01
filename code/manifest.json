@@ -30,20 +30,6 @@
         "notifications",
         "storage"
     ],
-    "web_accessible_resources": [
-        "js/libs/jquery.js",
-        "js/libs/progress.js",
-        "js/content.js",
-        "js/options.js",
-        "js/popup.js",
-        "html/options.html",
-        "html/popup.html",
-        "css/libs/bootstrap.css",
-        "css/libs/progressjs.min.css",
-        "css/popup.css",
-        "images/icon-locked-128.png",
-        "images/icon-unlocked-128.png"
-    ],
     "content_security_policy": "script-src 'self'; object-src 'self'",
     "options_ui": {
         "page": "html/options.html",
