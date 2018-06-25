@@ -66,49 +66,49 @@
       chrome.storage.local.set({lastQuery: query});
     });
 
-    // copy username
-    $('.container').on('click', '.username-copy', function onClick(event) {
-      var username = $(event.target).closest('.secret').find('.username');
+    // // copy username
+    // $('.container').on('click', '.username-copy', function onClick(event) {
+    //   var username = $(event.target).closest('.secret').find('.username');
 
-      msg.bg('copyUsername', username.val(),
-        function copyUsernameCallback() {
-          // remove existing 'copied' indicators
-          $('.copied').each(function forEachCopiedElem(i, elem) {
-            $(elem).text($(elem).data('reset-text'));
-            $(elem).removeClass('copied label-primary');
-          });
-          // indicate this username has been copied
-          $(event.target).text($(event.target).data('copied-text'));
-          $(event.target).addClass('copied label-primary');
-        });
-    });
+    //   msg.bg('copyUsername', username.val(),
+    //     function copyUsernameCallback() {
+    //       // remove existing 'copied' indicators
+    //       $('.copied').each(function forEachCopiedElem(i, elem) {
+    //         $(elem).text($(elem).data('reset-text'));
+    //         $(elem).removeClass('copied label-primary');
+    //       });
+    //       // indicate this username has been copied
+    //       $(event.target).text($(event.target).data('copied-text'));
+    //       $(event.target).addClass('copied label-primary');
+    //     });
+    // });
 
-    // copy password
-    $('.container').on('click', '.password-copy', function onClick(event) {
-      var secret = $(event.target).closest('.secret');
-      var path = $(secret).data('path');
-      var username = $(secret).data('username');
+    // // copy password
+    // $('.container').on('click', '.password-copy', function onClick(event) {
+    //   var secret = $(event.target).closest('.secret');
+    //   var path = $(secret).data('path');
+    //   var username = $(secret).data('username');
 
-      msg.bg('copyPassword', path, username,
-        function copyPasswordCallback(data) {
-          if (data.error) {
-            $(event.target).removeClass('copied label-primary');
-            $(event.target).addClass('label-danger');
+    //   msg.bg('copyPassword', path, username,
+    //     function copyPasswordCallback(data) {
+    //       if (data.error) {
+    //         $(event.target).removeClass('copied label-primary');
+    //         $(event.target).addClass('label-danger');
 
-            showErrorNotification(data.error + ': ' + data.response);
-          } else {
-            // remove existing 'copied' indicators
-            $('.copied').each(function forEachCopiedElem(i, elem) {
-              $(elem).text($(elem).data('reset-text'));
-              $(elem).removeClass('copied label-primary');
-            });
-            // indicate this password has been copied
-            $(event.target).text($(event.target).data('copied-text'));
-            $(event.target).removeClass('label-danger');
-            $(event.target).addClass('copied label-primary');
-          }
-        });
-    });
+    //         showErrorNotification(data.error + ': ' + data.response);
+    //       } else {
+    //         // remove existing 'copied' indicators
+    //         $('.copied').each(function forEachCopiedElem(i, elem) {
+    //           $(elem).text($(elem).data('reset-text'));
+    //           $(elem).removeClass('copied label-primary');
+    //         });
+    //         // indicate this password has been copied
+    //         $(event.target).text($(event.target).data('copied-text'));
+    //         $(event.target).removeClass('label-danger');
+    //         $(event.target).addClass('copied label-primary');
+    //       }
+    //     });
+    // });
 
     // copy username
     $('.container').on('click', '.username-copy', function onClick(event) {
@@ -242,15 +242,54 @@
         });
     });
 
+    // // copy token
+    // $('.container').on('click', '.token-copy', function onClick(event) {
+    //   var secret = $(event.target).closest('.secret');
+    //   var path = $(secret).data('path');
+    //   var username = $(secret).data('username');
+
+    //   msg.bg('copyToken', path, username,
+    //     function copyTokenCallback(data) {
+
+    //       if (data.error) {
+    //         stopTokenProgress();
+    //         $(event.target).removeClass('copied label-primary');
+    //         $(event.target).addClass('label-danger');
+
+    //         showErrorNotification(data.error + ': ' + data.response);
+    //       } else {
+    //         // remove existing 'copied' indicators
+    //         $('.copied').each(function forEachCopiedElem(i, elem) {
+    //           $(elem).text($(elem).data('reset-text'));
+    //           $(elem).removeClass('copied label-primary');
+    //         });
+    //         // indicate this token has been copied
+    //         $(event.target).text($(event.target).data('copied-text'));
+    //         $(event.target).removeClass('label-danger');
+    //         $(event.target).addClass('copied label-primary');
+    //       }
+    //     });
+    // });
+
     // copy token
     $('.container').on('click', '.token-copy', function onClick(event) {
       var secret = $(event.target).closest('.secret');
+      var token = $(secret).find('.token');
+
+      // copy-to-clipboard doesn't work from a background page (yet)
+      // so:
+      // - always fetch it, show it, copy it, hide it
+
+      // since a .trigger('click') doesn't work with adding callbacks this
+      // is simply duplicate code
+      var secretTemplate = $($('#secrets-list-item-template').html());
+      var hiddenTokenText = secretTemplate.find('input.token').val();
       var path = $(secret).data('path');
       var username = $(secret).data('username');
 
-      msg.bg('copyToken', path, username,
-        function copyTokenCallback(data) {
-
+      var copy = !$(secret).find('.token-show').hasClass('label-success');
+      msg.bg('showToken', path, username, copy,
+        function showTokenCallback(data) {
           if (data.error) {
             stopTokenProgress();
             $(event.target).removeClass('copied label-primary');
@@ -258,6 +297,16 @@
 
             showErrorNotification(data.error + ': ' + data.response);
           } else {
+            // show it
+            $(token).val(data.token);
+            $(event.target).removeClass('label-danger');
+            // copy it
+            copyToClipboard(token);
+            if (copy) {
+              // hide it
+              $(token).val(hiddenTokenText);
+            }
+
             // remove existing 'copied' indicators
             $('.copied').each(function forEachCopiedElem(i, elem) {
               $(elem).text($(elem).data('reset-text'));
@@ -279,7 +328,8 @@
       var path = $(secret).data('path');
       var username = $(secret).data('username');
 
-      msg.bg('showToken', path, username,
+      var copy = false;
+      msg.bg('showToken', path, username, copy,
         function showTokenCallback(data) {
           // remove any success or danger classes from other buttons
           $('.token-show').removeClass('label-success label-danger');

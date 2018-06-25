@@ -144,40 +144,40 @@ chrome.notifications.onClicked.addListener(function callback(notificationId) {
     //   done();
     // },
 
-    copyToken: function copyToken(path, username, done) {
-      getTokenGenerator(path, username, function getTokenGeneratorCallback(result) {
-        if (!result.error) {
-          // copy
-          var lastToken = result.generate();
-          copyToClipboard(lastToken);
+    // copyToken: function copyToken(path, username, done) {
+    //   getTokenGenerator(path, username, function getTokenGeneratorCallback(result) {
+    //     if (!result.error) {
+    //       // copy
+    //       var lastToken = result.generate();
+    //       copyToClipboard(lastToken);
 
-          // refresh token as long as the popup is open
-          refreshTokenTimeout = setTimeout(function refreshTokenCopy() {
-            var newToken = result.generate();
-            if (newToken !== lastToken) {
-              lastToken = newToken;
+    //       // refresh token as long as the popup is open
+    //       refreshTokenTimeout = setTimeout(function refreshTokenCopy() {
+    //         var newToken = result.generate();
+    //         if (newToken !== lastToken) {
+    //           lastToken = newToken;
 
-              // when copying for last shown token, update visible token too
-              if (showTokenForPath === path) {
-                msg.cmd(['popup'], 'refreshTokenShow', path, lastToken);
-              }
-              msg.cmd(['popup'], 'refreshTokenCopy', path, lastToken);
-            }
+    //           // when copying for last shown token, update visible token too
+    //           if (showTokenForPath === path) {
+    //             msg.cmd(['popup'], 'refreshTokenShow', path, lastToken);
+    //           }
+    //           msg.cmd(['popup'], 'refreshTokenCopy', path, lastToken);
+    //         }
 
-            if (popupIsOpen) {
-              refreshTokenTimeout = setTimeout(refreshTokenCopy, 1000);
-            } else {
-              // clear
-              result.generate = null;
-            }
-          }, 1000);
+    //         if (popupIsOpen) {
+    //           refreshTokenTimeout = setTimeout(refreshTokenCopy, 1000);
+    //         } else {
+    //           // clear
+    //           result.generate = null;
+    //         }
+    //       }, 1000);
 
-          done({token: lastToken});
-        } else {
-          done(result);
-        }
-      });
-    },
+    //       done({token: lastToken});
+    //     } else {
+    //       done(result);
+    //     }
+    //   });
+    // },
 
     // copyPassword: function copyPassword(path, username, done) {
     //   getPassword(path, username, function getPasswordCallback(result) {
@@ -316,8 +316,10 @@ chrome.notifications.onClicked.addListener(function callback(notificationId) {
       chrome.storage.local.set(options, done);
     },
 
-    showToken: function showToken(path, username, done) {
-      showTokenForPath = path;
+    showToken: function showToken(path, username, copy, done) {
+      if (!copy) {
+        showTokenForPath = path;
+      }
 
       getTokenGenerator(path, username, function getTokenGeneratorCallback(result) {
         if (!result.error) {
@@ -328,7 +330,13 @@ chrome.notifications.onClicked.addListener(function callback(notificationId) {
             var newToken = result.generate();
             if (newToken !== lastToken) {
               lastToken = newToken;
-              msg.cmd(['popup'], 'refreshTokenShow', path, lastToken);
+              if (copy) {
+                msg.cmd(['popup'], 'refreshTokenCopy', path, lastToken);
+              }
+              // when copying for last shown token, update visible token too
+              if (!copy || showTokenForPath === path) {
+                msg.cmd(['popup'], 'refreshTokenShow', path, lastToken);
+              }
             }
 
             if (popupIsOpen) {
